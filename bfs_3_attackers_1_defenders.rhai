@@ -7,7 +7,6 @@ if "n_tick" in memory {
 }
  */
 
-RUST_BACKTRACE = 1
 fn get_quarter() {
     let pos_x = worker(7).x;
     let pos_y = worker(7).y;
@@ -29,17 +28,52 @@ fn colour() {
     worker(0).color;
 }
 
-fn get_target(w) {
-    switch w {
-        0 => Tile::RED,
-        1 => Tile::GREEN,
-        2 => Tile::BLUE,
-        3 => Tile::RED,
-        4 => Tile::GREEN,
-        5 => Tile::BLUE,
-        6 => "other",
-        7 => "other",
+fn get_target(w, map) {
+    // there are not always the same amount of rivals and we are not always yellow
+    let list_cols = [];
+    for worker in map.workers {
+        let c = worker.color;
+        if c != colour() && list_cols.contains(c) == false {
+            list_cols += c;
+        }
     }
+
+    let col = "";
+    if len(list_cols) == 3 {
+        col = switch w {
+            0 => list_cols[0],
+            1 => list_cols[1],
+            2 => list_cols[2],
+            3 => "other",
+            4 => "other",
+            5 => "other",
+            6 => "other",
+            7 => "other",
+        }
+    } else if len(list_cols) == 2 {
+        col = switch w {
+            0 => list_cols[0],
+            1 => list_cols[0],
+            2 => list_cols[1],
+            3 => list_cols[1],
+            4 => "other",
+            5 => "other",
+            6 => "other",
+            7 => "other",
+        }
+    } else {
+        col = switch w {
+            0 => list_cols[0],
+            1 => list_cols[0],
+            2 => list_cols[0],
+            3 => list_cols[0],
+            4 => "other",
+            5 => "other",
+            6 => "other",
+            7 => "other",
+        }
+    }
+    return col;
 }
 
 fn get_limits(w) {
@@ -55,6 +89,7 @@ fn get_limits(w) {
 
 
 fn find_next_pos(w, x, y, map) {
+    
     let mtrx = [];
     for i in 0..40 {
         let row = [];
@@ -67,13 +102,15 @@ fn find_next_pos(w, x, y, map) {
 
     while len(queue) > 0 {
         let first = queue.shift();
-
+        
         let pos_x = first[0];
         let pos_y = first[1];
         
-        let target = get_target(w);
-        if target != "other" && map[pos_x][pos_y] == target || target == "other" && map[pos_x][pos_y] != colour() {
+        let target = get_target(w, map);
+
+        if (target != "other" && map[pos_x][pos_y] == target) || (target == "other" && map[pos_x][pos_y] != colour()) {
             //target reached
+            
             let dest = mtrx[pos_x][pos_y];
             while (dest != [x, y]) {
                 pos_x = dest[0];
@@ -121,9 +158,10 @@ fn find_next_pos(w, x, y, map) {
 for w in 0..8 {
     let x = worker(w).x;
     let y = worker(w).y;
+    
 
     let next_pos = find_next_pos(w, x, y, map);
-
+    
     if next_pos[0] == x {
         if next_pos[1] == y + 1 {
             worker(w).move_up();
