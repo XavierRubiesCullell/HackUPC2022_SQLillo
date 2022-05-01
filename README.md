@@ -1,4 +1,4 @@
-# HackUPC2022_SQLillo
+# HackUPC2022_SQLete
 SQLillo challenge in HackUPC 2022 👩🏻‍💻
 
 Hi, we are @XavierRubiesCullell and @danaecanillas! 👋
