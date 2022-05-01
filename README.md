@@ -12,9 +12,9 @@ The number of each set of workers changes in each script, you can consult the st
 
 If you want to execute a single bot you must run the following line in your terminal:
 ```console
-./runner_rs --run code.rhai
+./runner_rs --run strategies/code.rhai
 ```
 or if you want to run multiple local bots you can run
 ```console
-./runner_rs --run code1.rhai code2.rhai code3.rhai
+./runner_rs --run strategies/code1.rhai strategies/code2.rhai strategies/code3.rhai
 ```
